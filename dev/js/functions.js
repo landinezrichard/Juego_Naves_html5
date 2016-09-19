@@ -53,15 +53,61 @@ function init(){
 	- Rellena el trazo:
 
 		ctx.fill();
+
+	- Empieza un nuevo camino o trazo, es decir, no continua dibujando desde donde iva.
+
+		ctx.beginPath();
+
+	- Se mueve hacia un nuevo punto, sin trazar.
+
+		ctx.moveTo(x,y);
 	*/
 
-	ctx.arc(20,20,10,0,convertirRadianes(360));
+	/*Canvas con trazos unidos*/
 
-	ctx.arc(50,50,10,0,convertirRadianes(180));
+	ctx.arc(50,50,10,toRadianes(0),toRadianes(360),true);	
 
-	ctx.arc(80,80,10,0,convertirRadianes(180),true);
+	ctx.arc(50,50,30,toRadianes(90),toRadianes(180),true);	
+
+	ctx.arc(150,50,10,toRadianes(0),toRadianes(360),true);	
+
+	ctx.arc(150,50,30,toRadianes(90),toRadianes(360),false);
+
+	ctx.stroke();	
+
+	ctx.arc(90,110,30,toRadianes(0),toRadianes(180));
 
 	ctx.stroke();
+
+	/*Canvas Con las nuevas funciones*/
+
+	var canvas2 = document.getElementById('canvas2');
+
+	var ctx2 = canvas2.getContext('2d');
+
+	ctx2.beginPath();
+
+	ctx2.arc(50,50,10,toRadianes(0),toRadianes(360),true);
+
+	ctx2.moveTo(50,80);
+
+	ctx2.arc(50,50,30,toRadianes(90),toRadianes(180),true);
+
+	ctx2.moveTo(160,50);
+
+	ctx2.arc(150,50,10,toRadianes(0),toRadianes(360),true);
+
+	ctx2.moveTo(150,80);
+
+	ctx2.arc(150,50,30,toRadianes(90),toRadianes(360),false);
+
+	ctx2.stroke();
+
+	ctx2.beginPath();
+
+	ctx2.arc(90,110,30,toRadianes(0),toRadianes(180));
+
+	ctx2.stroke();
 }
 
 
@@ -75,6 +121,6 @@ function erase(canvas, ctx){
 	ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-function convertirRadianes(grados){
+function toRadianes(grados){
 	return (grados * Math.PI) / 180;
 }
