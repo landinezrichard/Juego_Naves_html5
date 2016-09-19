@@ -6,6 +6,14 @@ function init(){
 	var ctx = canvas.getContext('2d');
 
 	/*
+	Cambia el alpha global del color
+
+	recibe valores entre el 0 al 1
+	*/
+
+	ctx.globalAlpha = 0.5;
+
+	/*
 	Cambia el color de relleno
 	*/
 	ctx.fillStyle = 'red';
@@ -22,6 +30,12 @@ function init(){
 	*/
 
 	ctx.strokeStyle = "blue";
+
+	/*
+	Modifica el ancho de línea (default = 1)
+	*/
+
+	ctx.lineWidth = 10;
 
 	/*
 	Dibuja en rectangulo sin relleno
