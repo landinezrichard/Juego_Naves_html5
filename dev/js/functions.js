@@ -42,4 +42,17 @@ function init(){
 	*/
 
 	ctx.strokeRect(90,90,50,50);
+
+	erase(canvas,ctx);
+}
+
+
+function erase(canvas, ctx){
+
+	/*
+	Dibuja un rectangulo transparente, usado para borrar.
+
+	En este caso borra todo el lienzo o canvas.
+	*/
+	ctx.clearRect(0,0,canvas.width,canvas.height);
 }
