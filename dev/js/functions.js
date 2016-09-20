@@ -1,5 +1,13 @@
 window.addEventListener('load',init);
 
+var velocidad = 5,
+	direccion = velocidad,
+	iniciar = false,
+	x = 50,
+	y = 10;
+
+var intervalo;
+
 function init(){
 	var canvas = document.getElementById('micanvas');
 
@@ -79,9 +87,25 @@ function init(){
 		Sirve para retaurar al ultimo estado del contexto, es decir, al punto en donde se guardo con "ctx.save()". 
 	*/
 
-	ctx.strokeStyle = 'black';
-	dibujarCirculo(ctx,'red');
-	ctx.strokeRect(0,0,20,30);
+	ctx.fillStyle = 'rgb(200,0,0)';
+	
+	ctx.arc(x,y,10,0,toRadianes(360));
+
+	ctx.fill();
+
+	document.getElementById('boton').addEventListener('click', function(){
+		if (iniciar) {
+			this.value = 'Iniciar';
+			window.clearInterval(intervalo);
+			iniciar = false;
+		}else{
+			this.value = 'Detener';
+			intervalo = window.setInterval(function(){
+				moveAndDraw(canvas,ctx);
+			},32);
+			iniciar = true;
+		}
+	});
 
 }
 
@@ -100,11 +124,32 @@ function toRadianes(grados){
 	return (grados * Math.PI) / 180;
 }
 
-function dibujarCirculo(ctx,color){
-	ctx.save();
-	ctx.beginPath();
-	ctx.strokeStyle = color;
-	ctx.arc(70,70,25,0,toRadianes(360));
-	ctx.stroke();
-	ctx.restore();
+function draw(canvas,ctx,x,y){
+	
+	//Borra el canvas
+	canvas.width = canvas.width;
+
+	//No sirve, ???
+	//erase(canvas,ctx);	
+	ctx.arc(x,y,10,0,toRadianes(360));
+
+	//Aquí no sirve ctx.save(); ctx.restore(); toca indicar nuevamente el color de relleno.
+	ctx.fillStyle = 'rgb(200,0,0)';
+
+
+	ctx.fill();
+}
+
+function moveAndDraw(canvas,ctx){
+	if (y > (canvas.height - 20)) {
+		direccion = -velocidad;
+	}
+
+	if (y < 20) {
+		direccion = velocidad;
+	}
+
+	y += direccion;
+
+	draw(canvas,ctx,x,y);
 }
