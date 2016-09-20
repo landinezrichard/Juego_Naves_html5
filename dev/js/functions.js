@@ -65,15 +65,23 @@ function init(){
 	- Dibujar Imagen:
 
 		ctx.drawImage(imagen,x,y,ancho,alto);
+
+	- Guardar estado del contexto:
+
+		ctx.save();
+
+		Sirve para guardar, por ejemplo el color del borde, antes de que sea modificado.
+
+	- Restaurar el estado del contexto:
+
+		ctx.restore();
+
+		Sirve para retaurar al ultimo estado del contexto, es decir, al punto en donde se guardo con "ctx.save()". 
 	*/
 
-	var pokeImg = new Image();
-
-	pokeImg.src = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png";
-
-	pokeImg.onload = function(){
-		ctx.drawImage(pokeImg,0,0);
-	};
+	ctx.strokeStyle = 'black';
+	dibujarCirculo(ctx,'red');
+	ctx.strokeRect(0,0,20,30);
 
 }
 
@@ -90,4 +98,13 @@ function erase(canvas, ctx){
 
 function toRadianes(grados){
 	return (grados * Math.PI) / 180;
+}
+
+function dibujarCirculo(ctx,color){
+	ctx.save();
+	ctx.beginPath();
+	ctx.strokeStyle = color;
+	ctx.arc(70,70,25,0,toRadianes(360));
+	ctx.stroke();
+	ctx.restore();
 }
