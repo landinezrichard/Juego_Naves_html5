@@ -6,13 +6,20 @@ var ctx = canvas.getContext('2d');
 
 var fondo;
 
-var velocidad = 5,
-	direccion = velocidad,
-	iniciar = false,
-	x = 50,
-	y = 10;
+var nave = {
+	x: 100,
+	y: canvas.height-60,
+	width: 50,
+	height: 50,
+	velocidad: 6
+}
 
-function init(){	
+var teclado = {};
+
+var proyectiles = [];
+
+function init(){
+	eventosTeclado();	
 	loadMedia();
 }
 
@@ -32,8 +39,76 @@ function drawBackground(){
 	ctx.drawImage(fondo,0,0);
 }
 
+function drawNave(){
+	ctx.save();
+	ctx.fillStyle = 'white';
+	ctx.fillRect(nave.x,nave.y,nave.width,nave.height);
+	ctx.restore();
+}
+
+function eventosTeclado(){
+	document.addEventListener('keydown',function(e){		
+			teclado[e.keyCode] = true;
+		},
+	false);
+
+	document.addEventListener('keyup',function(e){
+			teclado[e.keyCode] = false;
+		},
+	false);
+}
+
+function moverNave(){
+	//tecla flecha izq = 37
+	if(teclado[37]){
+		nave.x -= nave.velocidad;
+		if (nave.x < 0) {
+			nave.x = 0;
+		}
+	}
+	//tecla flecha der = 39
+	if(teclado[39]){
+		var limite = canvas.width - nave.width;
+		nave.x += nave.velocidad;
+		if (nave.x > limite) {
+			nave.x = limite;
+		}
+	}
+}
+
+function crearProyectil(){
+	proyectiles.push({
+		x: nave.x + 20,
+		y: nave.y -10,
+		width: 10,
+		height: 30
+	});
+}
+
+function moverProyectiles(){
+	for (var i in proyectiles) {
+		var bala = proyectiles[i];
+		bala.y -= 2;
+	}
+
+	proyectiles = proyectiles.filter(function(bala){
+			return bala.y > 0;
+	});
+}
+
+function drawProyectiles(){
+	ctx.save();
+	ctx.fillStyle = 'white';
+
+	ctx.restore();
+}
+
 function frameLoop(){
+	moverNave();
+	moverProyectiles();
 	drawBackground();
+	drawProyectiles();
+	drawNave();
 }
 
 
