@@ -74,6 +74,18 @@ function moverNave(){
 			nave.x = limite;
 		}
 	}
+	//Tecla barra espaciadora = 32
+	if(teclado[32]){
+		/*
+		Restrinjimos los diparos, para que no salgan muchos al mismo tiempo (si el usuario deja presionada la barra espaciadora), esto lo hacemos con una variable booleana teclado.fire
+		*/
+		if(teclado.fire){
+			crearProyectil();
+			teclado.fire = false;
+		}
+	}else{
+		teclado.fire = true;
+	}
 }
 
 function crearProyectil(){
@@ -91,6 +103,9 @@ function moverProyectiles(){
 		bala.y -= 2;
 	}
 
+	/*
+	Filtramos los proyectiles, eliminando los que salen fuera del canvas
+	*/
 	proyectiles = proyectiles.filter(function(bala){
 			return bala.y > 0;
 	});
@@ -98,7 +113,15 @@ function moverProyectiles(){
 
 function drawProyectiles(){
 	ctx.save();
+
 	ctx.fillStyle = 'white';
+
+	for (var i in proyectiles) {
+		
+		var bala = proyectiles[i];
+
+		ctx.fillRect(bala.x,bala.y,bala.width,bala.height);
+	}
 
 	ctx.restore();
 }
