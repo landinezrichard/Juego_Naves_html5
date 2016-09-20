@@ -3,7 +3,7 @@ window.addEventListener('load',init);
 function init(){
 	var canvas = document.getElementById('micanvas');
 
-	var ctx = canvas.getContext('2d');
+	 var ctx = canvas.getContext('2d');
 
 	/*
 	- Cambia el alpha global del color
@@ -61,53 +61,20 @@ function init(){
 	- Se mueve hacia un nuevo punto, sin trazar.
 
 		ctx.moveTo(x,y);
+
+	- Dibujar Imagen:
+
+		ctx.drawImage(imagen,x,y,ancho,alto);
 	*/
 
-	/*Canvas con trazos unidos*/
+	var pokeImg = new Image();
 
-	ctx.arc(50,50,10,toRadianes(0),toRadianes(360),true);	
+	pokeImg.src = "http://assets.pokemon.com/assets/cms2/img/pokedex/full/001.png";
 
-	ctx.arc(50,50,30,toRadianes(90),toRadianes(180),true);	
+	pokeImg.onload = function(){
+		ctx.drawImage(pokeImg,0,0);
+	};
 
-	ctx.arc(150,50,10,toRadianes(0),toRadianes(360),true);	
-
-	ctx.arc(150,50,30,toRadianes(90),toRadianes(360),false);
-
-	ctx.stroke();	
-
-	ctx.arc(90,110,30,toRadianes(0),toRadianes(180));
-
-	ctx.stroke();
-
-	/*Canvas Con las nuevas funciones*/
-
-	var canvas2 = document.getElementById('canvas2');
-
-	var ctx2 = canvas2.getContext('2d');
-
-	ctx2.beginPath();
-
-	ctx2.arc(50,50,10,toRadianes(0),toRadianes(360),true);
-
-	ctx2.moveTo(50,80);
-
-	ctx2.arc(50,50,30,toRadianes(90),toRadianes(180),true);
-
-	ctx2.moveTo(160,50);
-
-	ctx2.arc(150,50,10,toRadianes(0),toRadianes(360),true);
-
-	ctx2.moveTo(150,80);
-
-	ctx2.arc(150,50,30,toRadianes(90),toRadianes(360),false);
-
-	ctx2.stroke();
-
-	ctx2.beginPath();
-
-	ctx2.arc(90,110,30,toRadianes(0),toRadianes(180));
-
-	ctx2.stroke();
 }
 
 
