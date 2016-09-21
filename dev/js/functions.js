@@ -159,11 +159,27 @@ function actualizaEnemigos(){
 				y: 10,
 				height: 40,
 				width: 40,
-				estado: 'vivo'
+				estado: 'vivo',
+				contador: 0
 			});
 		}
 		juego.estado = 'jugando';
 	}
+
+	/*
+	utilizamos la función trigonometrica seno, porque nos permite obtener valores positivos y negativos, esto para que los enemigos se muevan de izquierda a derecha, sin salirse de la pantalla.
+	*/
+
+	for (var i in enemigos){
+		var enemigo = enemigos[i];
+		if(!enemigo){
+			continue;
+		}
+		if(enemigo && enemigo.estado == 'vivo'){
+			enemigo.contador++;
+			enemigo.x += Math.sin(enemigo.contador * Math.PI / 90)*5;
+		}
+	};
 }
 
 function frameLoop(){
