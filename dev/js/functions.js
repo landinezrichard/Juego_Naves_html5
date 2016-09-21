@@ -14,9 +14,15 @@ var nave = {
 	velocidad: 6
 }
 
+var juego ={
+	estado: 'iniciando'
+};
+
 var teclado = {};
 
 var proyectiles = [];
+
+var enemigos = [];
 
 function init(){
 	eventosTeclado();	
@@ -126,11 +132,47 @@ function drawProyectiles(){
 	ctx.restore();
 }
 
+function drawEnemigos(){
+	ctx.save();
+	
+	for (var i in enemigos) {
+		
+		var enemigo = enemigos[i];
+
+		if(enemigo.estado == 'vivo'){
+			ctx.fillStyle = 'red';
+		}
+		if(enemigo.estado == 'muerto'){
+			ctx.fillStyle = 'black';
+		}
+		ctx.fillRect(enemigo.x,enemigo.y,enemigo.width,enemigo.height);
+	}
+
+	ctx.restore();
+}
+
+function actualizaEnemigos(){
+	if(juego.estado == 'iniciando'){
+		for(var i = 0;i<10;i++){
+			enemigos.push({
+				x: 10 + (i*50),
+				y: 10,
+				height: 40,
+				width: 40,
+				estado: 'vivo'
+			});
+		}
+		juego.estado = 'jugando';
+	}
+}
+
 function frameLoop(){
 	moverNave();
 	moverProyectiles();
+	actualizaEnemigos();
 	drawBackground();
 	drawProyectiles();
+	drawEnemigos();
 	drawNave();
 }
 
