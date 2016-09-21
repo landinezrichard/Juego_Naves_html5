@@ -133,8 +133,9 @@ function drawProyectiles(){
 }
 
 function drawEnemigos(){
-	ctx.save();
 	
+	ctx.save();
+
 	for (var i in enemigos) {
 		
 		var enemigo = enemigos[i];
@@ -142,8 +143,8 @@ function drawEnemigos(){
 		if(enemigo.estado == 'vivo'){
 			ctx.fillStyle = 'red';
 		}
-		if(enemigo.estado == 'muerto'){
-			ctx.fillStyle = 'black';
+		if(enemigo.estado == 'hit'){
+			ctx.fillStyle = '#14B036';
 		}
 		ctx.fillRect(enemigo.x,enemigo.y,enemigo.width,enemigo.height);
 	}
@@ -179,7 +180,22 @@ function actualizaEnemigos(){
 			enemigo.contador++;
 			enemigo.x += Math.sin(enemigo.contador * Math.PI / 90)*5;
 		}
-	};
+		if(enemigo && enemigo.estado == 'hit'){
+			enemigo.contador++;
+			if(enemigo.contador >= 20){
+				enemigo.estado = 'muerto';
+				enemigo.contador = 0;
+			}
+		}
+	}
+
+	/* Eliminamos los enemigos muertos*/
+	enemigos = enemigos.filter(function(enemigo){
+		if(enemigo && enemigo.estado != 'muerto'){
+			return true;
+		}
+		return false;
+	});
 }
 
 function colisiones(a,b){
@@ -202,10 +218,25 @@ function colisiones(a,b){
 	return hit;
 }
 
+function verificarColision(){
+	for(var i in proyectiles){
+		var bala = proyectiles[i];
+		for(j in enemigos){
+			var enemigo = enemigos[j];
+			if( colisiones(bala,enemigo) ){
+				enemigo.estado = "hit";
+				enemigo.contador = 0;
+				console.log("golpe");
+			}
+		}
+	}
+}
+
 function frameLoop(){
 	moverNave();
 	moverProyectiles();
 	actualizaEnemigos();
+	verificarColision();
 	drawBackground();
 	drawProyectiles();
 	drawEnemigos();
