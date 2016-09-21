@@ -24,6 +24,8 @@ var proyectiles = [];
 
 var enemigos = [];
 
+var disparosEnemigos = [];
+
 function init(){
 	eventosTeclado();	
 	loadMedia();
@@ -179,6 +181,12 @@ function actualizaEnemigos(){
 		if(enemigo && enemigo.estado == 'vivo'){
 			enemigo.contador++;
 			enemigo.x += Math.sin(enemigo.contador * Math.PI / 90)*5;
+
+			//Crea el disparo enemigo
+			//igual a 4 para limitar los disparos y sea mas dificl que quede en 4.
+			if( aleatorio(0,enemigos.length*10) == 4){
+				disparosEnemigos.push(agregarDisparosEnemigos(enemigo));
+			}
 		}
 		if(enemigo && enemigo.estado == 'hit'){
 			enemigo.contador++;
@@ -226,19 +234,58 @@ function verificarColision(){
 			if( colisiones(bala,enemigo) ){
 				enemigo.estado = "hit";
 				enemigo.contador = 0;
-				console.log("golpe");
 			}
 		}
 	}
+}
+
+function drawDisparosEnemigos(){
+	ctx.save();
+	for(var i in disparosEnemigos){
+		var disparo = disparosEnemigos[i];
+		ctx.fillStyle = 'yellow';
+		ctx.fillRect(disparo.x,disparo.y,disparo.width,disparo.height);
+	}
+	ctx.restore();
+}
+
+function moverDisparosEnemigos(){
+	for(var i in disparosEnemigos){
+		var disparo = disparosEnemigos[i];
+		disparo.y += 3;
+	}
+	disparosEnemigos = disparosEnemigos.filter(function(disparo){
+			return disparo.y < canvas.height;
+	});
+}
+
+function agregarDisparosEnemigos(enemigo){
+	return {
+		x: enemigo.x,
+		y: enemigo.y,
+		width: 10,
+		height: 10,
+		contador: 0
+	};
+}
+
+function aleatorio(inferior, superior){
+	var posibilidades = superior - inferior;
+	var aleatorio = Math.random() * posibilidades;
+
+	aleatorio = Math.floor(aleatorio);
+	return parseInt(inferior) + aleatorio;
 }
 
 function frameLoop(){
 	moverNave();
 	moverProyectiles();
 	actualizaEnemigos();
+	moverDisparosEnemigos();
 	verificarColision();
 	drawBackground();
-	drawProyectiles();
+	drawProyectiles();	
+	drawDisparosEnemigos();
 	drawEnemigos();
 	drawNave();
 }
