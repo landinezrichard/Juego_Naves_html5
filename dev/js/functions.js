@@ -11,7 +11,8 @@ var nave = {
 	y: canvas.height-60,
 	width: 50,
 	height: 50,
-	velocidad: 6
+	velocidad: 6,
+	contador: 0
 }
 
 var juego ={
@@ -99,6 +100,19 @@ function moverNave(){
 		}
 	}else{
 		teclado.fire = true;
+	}
+	//Verificamos cuando la nave es golpeada (pierde)
+	if( nave.estado == 'hit' ){
+		nave.contador++;
+		//Se pone "20" para dar un poco de tiempo en que aparezca el mensaje game over
+		if ( nave.contador >= 20){
+			nave.contador = 0;
+			nave.estado = 'muerto';
+			juego.estado = 'perdido';
+			textoRespuesta.titulo = 'Game Over';
+			textoRespuesta.subtitulo = 'Presiona la tecla R para continuar';
+			textoRespuesta.contador = 0;
+		} 
 	}
 }
 
