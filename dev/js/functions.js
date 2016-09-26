@@ -26,6 +26,12 @@ var enemigos = [];
 
 var disparosEnemigos = [];
 
+var textoRespuesta ={
+	contador: -1,
+	titulo: "",
+	subtitulo: ""
+}
+
 function init(){
 	eventosTeclado();	
 	loadMedia();
@@ -290,7 +296,53 @@ function aleatorio(inferior, superior){
 	return parseInt(inferior) + aleatorio;
 }
 
+function actualizarEstadoJuego(){
+	if(juego.estado == 'jugando' && enemigos.length == 0){
+		juego.estado = 'victoria';
+		textoRespuesta.titulo = 'Derrotaste a los enemigos';
+		textoRespuesta.subtitulo = 'Presiona la tecla R para reiniciar';
+		textoRespuesta.contador = 0;
+	}
+	if( textoRespuesta.contador >= 0 ){
+		textoRespuesta.contador++;
+	}
+}
+
+function drawTexto(){
+	if(textoRespuesta.contador == -1){
+		return;
+	}
+
+	/*
+	Creamos una variable alpha, para que el texto aparezca con una transparencia y se vuelva solido (efecto como fade)
+	*/
+	var alpha = textoRespuesta.contador/50.0;
+
+	if(alpha > 1){
+		for(var i in enemigos){
+			delete enemigos[i];
+		}
+	}
+	ctx.save();
+	ctx.globalAlpha = alpha;
+	if(juego.estado == 'perdido'){
+		ctx.fillStyle = 'white';
+		ctx.font = 'Bold 40pt Arial';
+		ctx.fillText(textoRespuesta.titulo,100,200);
+		ctx.font = '14pt Arial';
+		ctx.fillText(textoRespuesta.subtitulo,190,250);
+	}
+	if(juego.estado == 'victoria'){
+		ctx.fillStyle = 'white';
+		ctx.font = 'Bold 40pt Arial';
+		ctx.fillText(textoRespuesta.titulo,80,200);
+		ctx.font = '14pt Arial';
+		ctx.fillText(textoRespuesta.subtitulo,190,250);
+	}
+}
+
 function frameLoop(){
+	actualizarEstadoJuego();
 	moverNave();
 	moverProyectiles();
 	actualizaEnemigos();
@@ -301,6 +353,7 @@ function frameLoop(){
 	drawDisparosEnemigos();
 	drawEnemigos();
 	drawNave();
+	drawTexto();
 }
 
 
@@ -375,5 +428,13 @@ function frameLoop(){
 
 	ctx.restore();
 
-	Sirve para retaurar al ultimo estado del contexto, es decir, al punto en donde se guardo con "ctx.save()". 
+	Sirve para retaurar al ultimo estado del contexto, es decir, al punto en donde se guardo con "ctx.save()".
+
+- Dibujar texto en el canvas:
+
+	var texto = 'Hola';
+
+	ctx.font = 'Bold 40pt Arial';
+
+	ctx.fillText(texto,x,y);
 */
