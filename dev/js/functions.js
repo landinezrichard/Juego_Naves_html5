@@ -320,6 +320,15 @@ function actualizarEstadoJuego(){
 	if( textoRespuesta.contador >= 0 ){
 		textoRespuesta.contador++;
 	}
+
+	/*
+	//tecla "r" = 82
+	*/
+	if( (juego.estado == 'perdido' || juego.estado == 'victoria') && teclado[82] ){
+		juego.estado = 'iniciando';
+		nave.estado = 'vivo';
+		textoRespuesta.contador = -1;
+	}
 }
 
 function drawTexto(){
@@ -361,7 +370,7 @@ function frameLoop(){
 	moverProyectiles();
 	actualizaEnemigos();
 	moverDisparosEnemigos();
-	verificarColision();
+	verificarColision();	
 	drawBackground();
 	drawProyectiles();	
 	drawDisparosEnemigos();
