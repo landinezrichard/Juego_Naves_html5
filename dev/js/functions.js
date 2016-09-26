@@ -237,6 +237,19 @@ function verificarColision(){
 			}
 		}
 	}
+
+	//Verificamos si los disparos enemigos tocan la nave
+
+	if(nave.estado == 'hit' || nave.estado == 'muerto'){
+		return;
+	}
+	for(var i in disparosEnemigos){
+		var disparo = disparosEnemigos[i];
+		if( colisiones(disparo,nave) ){
+			nave.estado = 'hit';
+			console.log('nave golpeada');
+		}
+	}
 }
 
 function drawDisparosEnemigos(){
