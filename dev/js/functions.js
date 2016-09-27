@@ -62,6 +62,27 @@ var textoRespuesta ={
 	subtitulo: ""
 }
 
+/*Sonidos*/
+var tema = new Howl({
+	src: '../sounds/theme.webm',
+	buffer: true
+});
+
+var soundInvader = new Howl({
+	src: '../sounds/Game-Spawn.webm',
+	buffer: true
+});
+
+var soundDisparo = new Howl({
+	src: '../sounds/Game-Shot.webm',
+	buffer: true
+});
+
+var soundExplosion = new Howl({
+	src: '../sounds/Game-Death.webm',
+	buffer: true
+});
+
 function init(){
 	eventosTeclado();	
 	loadMedia();
@@ -112,6 +133,7 @@ function loadComplete(){
 function progresoCarga(){
 	console.log( parseInt(preloader.progress * 100) + "%");
 	if( preloader.progress == 1){
+		tema.play();
 		var intervalo = window.setInterval(frameLoop, 1000/55);
 	}
 }
@@ -166,6 +188,7 @@ function moverNave(){
 		if(teclado.fire){
 			crearProyectil();
 			teclado.fire = false;
+			soundDisparo.play();
 		}
 	}else{
 		teclado.fire = true;
@@ -267,11 +290,11 @@ function actualizaEnemigos(){
 		if(enemigo && enemigo.estado == 'vivo'){
 			enemigo.contador++;
 			enemigo.x += Math.sin(enemigo.contador * Math.PI / 90)*5;
-
 			//Crea el disparo enemigo
 			//igual a 4 para limitar los disparos y sea mas dificl que quede en 4.
 			if( aleatorio(0,enemigos.length*10) == 4){
 				disparosEnemigos.push(agregarDisparosEnemigos(enemigo));
+				soundInvader.play();
 			}
 		}
 		if(enemigo && enemigo.estado == 'hit'){
@@ -320,6 +343,7 @@ function verificarColision(){
 			if( colisiones(bala,enemigo) ){
 				enemigo.estado = "hit";
 				enemigo.contador = 0;
+				soundExplosion.play();
 			}
 		}
 	}
