@@ -4,11 +4,40 @@ var canvas = document.getElementById('micanvas');
 
 var ctx = canvas.getContext('2d');
 
-var fondo;
+var imagenes = [
+	{
+		id: 'fondo',
+		src: '../images/space.jpg'
+	},
+	{
+		id: 'invader',
+		src: '../images/invader.png'
+	},
+	{
+		id: 'nave',
+		src: '../images/nave.png'
+	},
+	{
+		id: 'explosion',
+		src: '../images/explosion.png'
+	},
+	{
+		id: 'proyectil',
+		src: '../images/misil.png'
+	}
+];
+
+var preloader;
+
+var fondo,
+	imgNave,
+	imgInvader,
+	imgExplosion,
+	imgProyectil;
 
 var nave = {
 	x: 100,
-	y: canvas.height-60,
+	y: canvas.height-70,
 	width: 50,
 	height: 50,
 	velocidad: 6,
@@ -39,9 +68,50 @@ function init(){
 }
 
 function loadMedia(){
-	fondo = new Image();
-	fondo.src = '../images/space.jpg';
-	fondo.onload = function (){
+
+	preloader = new createjs.LoadQueue();
+	preloader.on('fileload',handleFileLoad);
+	
+//este si
+	// preloader.on('complete',loadComplete);
+
+	preloader.on('progress',progresoCarga);
+	preloader.loadManifest(imagenes);	
+}
+
+//Crea las imagenes (objetos JS)
+function handleFileLoad(event){
+	if(event.item.id == "fondo"){
+		fondo = new Image();
+		fondo.src = event.item.src;
+	}
+	if(event.item.id == "invader"){
+		imgInvader = new Image();
+		imgInvader.src = event.item.src;
+	}
+	if(event.item.id == "explosion"){
+		imgExplosion = new Image();
+		imgExplosion.src = event.item.src;
+	}
+	if(event.item.id == "nave"){
+		imgNave = new Image();
+		imgNave.src = event.item.src;
+	}
+	if(event.item.id == "proyectil"){
+		imgProyectil = new Image();
+		imgProyectil.src = event.item.src;
+	}
+}
+
+function loadComplete(){
+	var intervalo = window.setInterval(frameLoop, 1000/55);
+		fondo = new Image();
+		fondo.src = '../images/space.jpg';
+}
+
+function progresoCarga(){
+	console.log( parseInt(preloader.progress * 100) + "%");
+	if( preloader.progress == 1){
 		var intervalo = window.setInterval(frameLoop, 1000/55);
 	}
 }
@@ -51,13 +121,12 @@ function erase(canvas, ctx){
 }
 
 function drawBackground(){
-	ctx.drawImage(fondo,0,0);
+	ctx.drawImage(fondo,0,-30);
 }
 
 function drawNave(){
 	ctx.save();
-	ctx.fillStyle = 'white';
-	ctx.fillRect(nave.x,nave.y,nave.width,nave.height);
+	ctx.drawImage(imgNave,nave.x,nave.y,nave.width,nave.height);
 	ctx.restore();
 }
 
@@ -142,13 +211,11 @@ function moverProyectiles(){
 function drawProyectiles(){
 	ctx.save();
 
-	ctx.fillStyle = 'white';
-
 	for (var i in proyectiles) {
 		
 		var bala = proyectiles[i];
 
-		ctx.fillRect(bala.x,bala.y,bala.width,bala.height);
+		ctx.drawImage(imgProyectil,bala.x,bala.y,bala.width,bala.height);
 	}
 
 	ctx.restore();
@@ -162,13 +229,12 @@ function drawEnemigos(){
 		
 		var enemigo = enemigos[i];
 
-		if(enemigo.estado == 'vivo'){
-			ctx.fillStyle = 'red';
+		if(enemigo.estado == 'vivo'){			
+			ctx.drawImage(imgInvader,enemigo.x,enemigo.y,enemigo.width,enemigo.height);
 		}
-		if(enemigo.estado == 'hit'){
-			ctx.fillStyle = '#14B036';
-		}
-		ctx.fillRect(enemigo.x,enemigo.y,enemigo.width,enemigo.height);
+		if(enemigo.estado == 'hit'){			
+			ctx.drawImage(imgExplosion,enemigo.x,enemigo.y,enemigo.width,enemigo.height);
+		}		
 	}
 
 	ctx.restore();
@@ -267,7 +333,7 @@ function verificarColision(){
 		var disparo = disparosEnemigos[i];
 		if( colisiones(disparo,nave) ){
 			nave.estado = 'hit';
-			console.log('nave golpeada');
+			//nave golpeada			
 		}
 	}
 }
